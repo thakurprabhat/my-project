@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-center mt-5 container-fluid">
+  <div class="col-sm-4">
+    <ul class="list-group">
+      <li
+        class="list-group-item"
+        [ngClass]="{
+          active: selectedRecord?.SamplingTime == item?.SamplingTime
+        }"
+        *ngFor="let item of data?.Datas"
+        (click)="showDetails(item)"
+      >
+        {{ item?.SamplingTime }}
+      </li>
+    </ul>
+  </div>
+  <div class="p-3 col-sm-6 border" > 
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group row" *ngFor="let field of sampleData">
+        <label class="col-sm-6 col-form-label col-form-label-lg">{{
+          field.Label
+        }}</label>
+        <div class="col-sm-6" [ngSwitch]="getFieldType(field?.Value)">
+          <div class="col-sm-12" *ngSwitchCase="'number'">
+            <input
+            class="form-control"
+            [formControlName]="field?.Label"
+            [type]="getFieldType(field?.Value)"
+            [value]="field?.Value"
+            [step]="hasDecimalValue(field?.Value)"
+            (change)="onNumberChange($event, field?.Label)"
+            />
+          </div>
+          <div class="col-sm-12" *ngSwitchCase="'checkbox'">
+            <input
+            class="checkbox"
+            [formControlName]="field?.Label"
+            [type]="getFieldType(field?.Value, field?.Label)"
+            [value]="field?.Value"
+            [checked]="field?.Value"
+            (change)="onCheckboxChange($event, field?.Label)"
+            />
+          </div>
+          <div class="col-sm-12" *ngSwitchDefault>
+            <input
+            class="form-control"
+            [formControlName]="field?.Label"
+            [type]="getFieldType(field?.Value)"
+            [value]="field?.Value"
+            />          
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary">
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
